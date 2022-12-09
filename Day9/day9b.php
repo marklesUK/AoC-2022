@@ -82,11 +82,19 @@ function move_horizontal($dir) {
 	$diffx = $x[0] - $x[1];
 	$diffy = $y[0] - $y[1];
 
-	$diff = floor(sqrt(($diffx * $diffx) + ($diffy * $diffy)));
-	if ($diff > 1) {
-		$x[+1] += (($diffx === 0) ? 0 : (($diffx > 0) ? 1 : -1));
-		$y[+1] += (($diffy === 0) ? 0 : (($diffy > 0) ? 1 : -1));
+	if ($diffy === 0) {
+		// same row
+		if (abs($diffx) > 1) {
+			$x[1] += (($diffx > 0) ? 1 : -1);
+		}
+	} else {
+		$diff = floor(sqrt(($diffx * $diffx) + ($diffy * $diffy)));
+		if ($diff > 1) {
+			$x[1] += (($diffx === 0) ? 0 : (($diffx > 0) ? 1 : -1));
+			$y[1] += (($diffy === 0) ? 0 : (($diffy > 0) ? 1 : -1));
+		}
 	}
+
 	for($i = 1; $i < (KNOTS - 1); $i++) {
 		follow($i);
 	}
@@ -100,11 +108,19 @@ function move_vertical($dir) {
 	$diffx = $x[0] - $x[1];
 	$diffy = $y[0] - $y[1];
 
-	$diff = floor(sqrt(($diffx * $diffx) + ($diffy * $diffy)));
-	if ($diff > 1) {
-		$x[1] += (($diffx === 0) ? 0 : (($diffx > 0) ? 1 : -1));
-		$y[1] += (($diffy === 0) ? 0 : (($diffy > 0) ? 1 : -1));
+	if ($diffy === 0) {
+		// same row
+		if (abs($diffx) > 1) {
+			$x[1] += (($diffx > 0) ? 1 : -1);
+		}
+	} else {
+		$diff = floor(sqrt(($diffx * $diffx) + ($diffy * $diffy)));
+		if ($diff > 1) {
+			$x[1] += (($diffx === 0) ? 0 : (($diffx > 0) ? 1 : -1));
+			$y[1] += (($diffy === 0) ? 0 : (($diffy > 0) ? 1 : -1));
+		}
 	}
+
 	for($i = 1; $i < (KNOTS -1); $i++) {
 		follow($i);
 	}
@@ -118,18 +134,14 @@ foreach($lines as $line) {
 	}
 	if (preg_match('/^[LR] ([0-9]+)$/', $line, $matches)) {
 		for ($i = 0; $i < (int)$matches[1]; $i++) {
-			$x[0] += (($line[0] === 'R') ? 1 : -1);
+			move_horizontal($line[0] === 'R');
 		}
 	}
 	if (preg_match('/^[UD] ([0-9]+)$/', $line, $matches)) {
 		for ($i = 0; $i < (int)$matches[1]; $i++) {
-			$y[0] += (($line[0] === 'U') ? 1 : -1);
+			move_vertical($line[0] === 'U');
 		}
 	}
-	for($i = 0; $i < (KNOTS -1); $i++) {
-		follow($i);
-	}
-	$grid[$y[(KNOTS -1)]][$x[(KNOTS -1)]] = '#';
 	show_grid($grid, true);
 }
 
