@@ -69,8 +69,8 @@ function follow() {
 		$diffx = $x[$i] - $x[$i+1];
 		$diffy = $y[$i] - $y[$i+1];
 
-		$diff = floor(sqrt(($diffx * $diffx) + ($diffy * $diffy)));
-		if ($diff > 1) {
+		$diff = ($diffx * $diffx) + ($diffy * $diffy);
+		if ($diff > 2) {
 			$x[$i+1] += (($diffx === 0) ? 0 : (($diffx > 0) ? 1 : -1));
 			$y[$i+1] += (($diffy === 0) ? 0 : (($diffy > 0) ? 1 : -1));
 		}
